@@ -1,4 +1,5 @@
 src
-webpack.config.js
+examples
 .babelrc
-.eslintrc.js
+.gitignore
+webpack.config.js
