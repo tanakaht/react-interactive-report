@@ -1,2 +1,1 @@
-# React Component 
-Demo Page => 
+Demo Page => https://tanakaht.github.io/react-interactive-report/
