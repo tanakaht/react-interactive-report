@@ -1,6 +1,12 @@
 import React from 'react';
-import { render } from 'react-dom'
-import MyComponent from '../../src'
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
 
-const App = () => <MyComponent/>;
-render(<App />, document.getElementById('root'));
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);

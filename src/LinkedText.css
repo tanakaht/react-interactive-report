@@ -1,0 +1,4 @@
+.selected {
+  background : linear-gradient(transparent 50%, #ffa64d 65%);  /* ラインマーカーを付ける  */
+}
+

@@ -19,6 +19,11 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"]
+            },
+            {
+                test: /\.json$/,
+                loader: "json-loader",
+                type: "javascript/auto"
             }
         ]
     },
@@ -32,6 +37,6 @@ module.exports = {
     },
     // 開発用Webサーバのポートを指定します。
     devServer: {
-        port: 3001
+        port: 3000
     }
 }
