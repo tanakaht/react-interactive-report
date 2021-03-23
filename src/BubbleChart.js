@@ -44,16 +44,33 @@ class BubbleChart extends Component {
             emphasisObjects: new Set(),
             timescope: [_self.trange[0], _self.trange[1]]
         };
-        //this.emphasisObjects.add("United States");
     }
 
-    play(timeRange, emphasisObjects){
-        if(timeRange === null || timeRange === undefined){
-            this.timeRange = this.defaulttimeRange;
-        }else{
-            this.timeRange = timeRange;
+    play(plays) {
+        let type, param;
+        const _self = this;
+        for ([type, param] of plays) {
+            switch (type) {
+                case "setTime":
+                    _self.setState({ timescope: param });
+                    break;
+                case "setItem":
+                    if (typeof param == "string") {
+                        param = [param]
+                    }
+                    _self.setState({emphasisObjects: new Set(param)});
+                    break;
+                case "init":
+                    _self.setState({
+                        time: _self.trange[0], // TODO: これどう？
+                        timescope: _self.trange,
+                        emphasisObjects: new Set()
+                    });
+                    break;
+                default:
+                    break;
+            }
         }
-        this.emphasisObjects =　new Set(emphasisObjects);
     }
 
     componentDidMount() {
@@ -78,9 +95,10 @@ class BubbleChart extends Component {
             svg.attr("height", svg.node().getBoundingClientRect().width / 2);
             _self.height = svg.node().getBoundingClientRect().height;
             // scaleの更新
-            _self.x = d3.scaleLog(_self.xrange, [margin.left, _self.width - margin.right]);
-            _self.y = d3.scaleLinear(_self.yrange, [_self.height - margin.bottom, margin.top]);
-            _self.radius = d3.scaleSqrt(_self.rrange, [0, _self.width / 24]);
+            _self.x = d3[_self.props.xscale](_self.xrange, [margin.left, _self.width - margin.right]);
+            _self.y = d3[_self.props.yscale](_self.yrange, [_self.height - margin.bottom, margin.top]);
+            _self.radius = d3[_self.props.rscale](_self.rrange, [0, _self.width / 24]);
+
             // 時間の表記位置の調整
             svg.selectAll('text').filter('.time-label').remove();
             _self.time_label = svg.append("text").attr("class", "time-label")
@@ -103,7 +121,8 @@ class BubbleChart extends Component {
                     .attr("y", margin.bottom - 4)
                     .attr("fill", "currentColor")
                     .attr("text-anchor", "end")
-                    .text("Income per capita (dollars) →"));
+                    .text(_self.props.xname + " →"));
+                    //.text("Income per capita (dollars) →"));
             svg.append("g")
                 .attr("class", "yaxis")
                 .attr("transform", `translate(${margin.left},0)`)
@@ -114,7 +133,8 @@ class BubbleChart extends Component {
                     .attr("y", 10)
                     .attr("fill", "currentColor")
                     .attr("text-anchor", "start")
-                    .text("↑ Life expectancy (years)"));
+                    .text("↑ "+_self.props.yname));
+                    //.text("↑ Life expectancy (years)"));
         }
         prepare(svg);
         d3.select(window).on('resize', function () {
@@ -193,5 +213,11 @@ class BubbleChart extends Component {
         </div>
     }
 }
+
+BubbleChart.defaultProps = {
+    xscale: "scaleLinear",
+    yscale: "scaleLinear",
+    rscale: "scaleLinear"
+};
 
 export default BubbleChart
