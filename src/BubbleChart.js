@@ -80,6 +80,10 @@ class BubbleChart extends Component {
         this.updateChart(this.state.time);
     }
 
+    componentWillUnmount() {
+        clearInterval(this.stepInterval);
+      }
+
     createBubbleChart() {
         const _self = this,
             node = this.node,
@@ -87,7 +91,7 @@ class BubbleChart extends Component {
         let svg = d3.select(node),
             timeSlider = d3.select(_self.slider);
 
-        svg.attr("width", '80%');
+        svg.attr("width", _self.props.width);
         let margin = ({ top: 20, right: 20, bottom: 35, left: 40 });
 
         function prepare(svg) {
@@ -169,7 +173,7 @@ class BubbleChart extends Component {
                 _self.setState({time: currentTime+1})
             }
         }
-        setInterval(step, interval)
+        _self.stepInterval = setInterval(step, interval);
 
         function update(time){
             const circles = svg.selectAll('circle');
@@ -217,7 +221,8 @@ class BubbleChart extends Component {
 BubbleChart.defaultProps = {
     xscale: "scaleLinear",
     yscale: "scaleLinear",
-    rscale: "scaleLinear"
+    rscale: "scaleLinear",
+    width: "80%"
 };
 
 export default BubbleChart
